@@ -30,7 +30,6 @@ public class Gorge extends ApplicationAdapter {
 	@Override
 	public void create() {
 		assets = new Assets();
-		assets.load();
 
 		//Camera Stuff
 		cam = new PerspectiveCamera(24.4f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

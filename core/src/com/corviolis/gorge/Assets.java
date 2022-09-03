@@ -13,7 +13,7 @@ public class Assets {
     private final float frameRate = 12;
     public static final AssetDescriptor<TextureAtlas> textures = new AssetDescriptor<>(Gdx.files.internal("packed-images/textures_packed.atlas"), TextureAtlas.class);
 
-    public void load() {
+    public Assets() {
         manager.load(textures);
         manager.finishLoading();
     }

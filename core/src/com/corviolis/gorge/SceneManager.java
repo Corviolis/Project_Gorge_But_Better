@@ -17,6 +17,8 @@ public class SceneManager {
 
     private String activeSceneName;
     private int activeSceneId;
+    private FileHandle levelFile;
+    private long levelLastModified = 0;
     private final ArrayList<Decal> decals = new ArrayList<>();
     private final Assets assets;
     private final EntityManager entityManager;
@@ -32,7 +34,8 @@ public class SceneManager {
     }
 
     public void loadScene(int level) {
-        FileHandle levelFile = Gdx.files.internal("levels/" + level + ".json");
+        levelFile = Gdx.files.internal("levels/" + level + ".json");
+        levelLastModified = levelFile.lastModified();
         JsonValue json = new JsonReader().parse(levelFile);
 
         decals.clear();
@@ -80,6 +83,7 @@ public class SceneManager {
     }
 
     public void processActiveScene(DecalBatch decalBatch) {
+        if (levelLastModified < levelFile.lastModified()) reloadActiveScene(); //Reload scene if changes have been made to json
         for (Decal decal : decals) decalBatch.add(decal);
     }
 }

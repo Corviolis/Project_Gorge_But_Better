@@ -7,6 +7,12 @@
       "texture": "ground",
       "scale": 30,
       "position": [0, 0, 0]
+    },
+    {
+      "plane": "wall",
+      "texture": "rock",
+      "scale": 5,
+      "position": [0, 8, -10]
     }
   ],
   "items": [
