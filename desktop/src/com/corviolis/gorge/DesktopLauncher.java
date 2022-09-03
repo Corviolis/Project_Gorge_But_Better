@@ -2,7 +2,8 @@ package com.corviolis.gorge;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.corviolis.gorge.gorge;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
 public class DesktopLauncher {
@@ -10,6 +11,12 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
 		config.setTitle("Gorge");
-		new Lwjgl3Application(new gorge(), config);
+
+		Settings settings = new Settings();
+		settings.maxWidth = 2048;
+		settings.maxHeight = 2048;
+		TexturePacker.process(settings, "images", "packed-images", "textures_packed");
+
+		new Lwjgl3Application(new Gorge(), config);
 	}
 }
