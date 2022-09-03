@@ -16,8 +16,8 @@ public abstract class Entity {
         decal = assets.createDecal();
     }
 
-    public void setDecalPlane(Vector3 position) {
-        decal.lookAt(position, new Vector3(0, 1, 0));
+    public void setDecalPlane(Vector3 position, Vector3 up) {
+        decal.lookAt(this.position.add(position), up);
     }
 
     public void translate(Vector3 translation) {
@@ -38,4 +38,7 @@ public abstract class Entity {
     }
 
     public abstract Decal getDecal(float time);
+
+    // Called each game cycle
+    public abstract void update(float delta);
 }

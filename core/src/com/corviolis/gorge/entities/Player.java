@@ -13,17 +13,22 @@ public class Player extends Entity {
 
     public Player(Assets assets) {
         super(assets);
-        walk_right = Gorge.createAnimation(assets.getTextureRegions("player/walk_left"));
-        walk_left = Gorge.createAnimation(assets.getTextureRegions("player/walk_right"));
+        walk_right = assets.createAnimation(assets.getTextureRegions("player/walk_left"));
+        walk_left = assets.createAnimation(assets.getTextureRegions("player/walk_right"));
         walk_right.setPlayMode(Animation.PlayMode.LOOP);
         walk_left.setPlayMode(Animation.PlayMode.LOOP);
     }
 
     @Override
     public Decal getDecal(float time) {
-        if (direction == 1) decal.setTextureRegion(walk_right.getKeyFrame(time));
-        else if (direction == -1) decal.setTextureRegion(walk_left.getKeyFrame(time));
+        if (direction == -1) decal.setTextureRegion(walk_right.getKeyFrame(time));
+        else if (direction == 1) decal.setTextureRegion(walk_left.getKeyFrame(time));
         else if (direction == 0); //Set Idle Animation
         return decal;
+    }
+
+    @Override
+    public void update(float delta) {
+
     }
 }
