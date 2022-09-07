@@ -3,7 +3,7 @@
   "world": [
     {
       "plane": "floor",
-      "texture": "ground",
+      "texture": "rock",
       "scale": 30,
       "position": [0, 0, 0]
     }
