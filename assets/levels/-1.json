@@ -1,18 +1,11 @@
 {
   "name": "debug",
-  "camera_offset": [0, 8, 50],
   "world": [
     {
       "plane": "floor",
       "texture": "ground",
       "scale": 30,
       "position": [0, 0, 0]
-    },
-    {
-      "plane": "wall",
-      "texture": "rock",
-      "scale": 5,
-      "position": [0, 8, -10]
     }
   ],
   "items": [
@@ -25,6 +18,10 @@
     {
       "type": "player",
       "position": [0, 7.4, 0]
+    },
+    {
+      "type": "camera",
+      "position": [0, 0, 50]
     }
   ]
 }

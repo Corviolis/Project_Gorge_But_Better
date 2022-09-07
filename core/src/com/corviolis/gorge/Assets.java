@@ -10,7 +10,6 @@ import com.badlogic.gdx.utils.Array;
 
 public class Assets {
     public AssetManager manager = new AssetManager();
-    private final float frameRate = 12;
     public static final AssetDescriptor<TextureAtlas> textures = new AssetDescriptor<>(Gdx.files.internal("packed-images/textures_packed.atlas"), TextureAtlas.class);
 
     public Assets() {
@@ -31,7 +30,7 @@ public class Assets {
     }
 
     public Animation<TextureAtlas.AtlasRegion> createAnimation(Array<TextureAtlas.AtlasRegion> regions) {
-        return new Animation<>(1/frameRate, regions);
+        return new Animation<>(1/Gorge.FRAME_RATE, regions);
     }
 
     public void dispose() {

@@ -2,47 +2,46 @@ package com.corviolis.gorge;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
-import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.corviolis.gorge.entities.EntityManager;
 import com.corviolis.gorge.entities.Player;
-import com.corviolis.gorge.input.InputController;
-import com.corviolis.gorge.util.ZStrategyComparator;
+import com.corviolis.gorge.input.PlayerInputProcessor;
 
 public class Gorge extends ApplicationAdapter {
 	private PerspectiveCamera cam;
 	private DecalBatch decalBatch;
-	private InputController controller;
 	private EntityManager entityManager;
 	private SceneManager sceneManager;
 	private float delta = 0;
 
-	private static final float frameRate = 12;
+	public static final float FRAME_RATE = 12;
 	private Assets assets;
 
 	@Override
 	public void create() {
-		assets = new Assets();
-
-		//Camera Stuff
+		//Camera Setup
 		cam = new PerspectiveCamera(24.4f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.near = 1f;
-		cam.far = 300f;
-		decalBatch = new DecalBatch(new CameraGroupStrategy(cam, new ZStrategyComparator(cam)));
+		decalBatch = new DecalBatch(new CameraGroupStrategy(cam));
 
-		entityManager = new EntityManager(assets);
-		sceneManager = new SceneManager(assets, entityManager, cam);
+		//Internal Services
+		assets = new Assets();
+		entityManager = new EntityManager(assets, cam);
+		sceneManager = new SceneManager(assets, entityManager);
 		sceneManager.loadScene(-1);
 
-		controller = new InputController(entityManager.getPlayer(), sceneManager, cam);
-		Gdx.input.setInputProcessor(controller);
+		//Input Setup
+		InputMultiplexer inputMultiplexer = new InputMultiplexer();
+		if (entityManager.isPlayerLoaded()) {
+			Player player = entityManager.getPlayer();
+			entityManager.getCameraEntity().trackEntity(player);
+			inputMultiplexer.addProcessor(new PlayerInputProcessor(player));
+		}
+		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
 	@Override
@@ -56,9 +55,9 @@ public class Gorge extends ApplicationAdapter {
 	public void render() {
 		ScreenUtils.clear(Color.DARK_GRAY, true);
 		delta += Gdx.graphics.getDeltaTime();
-		controller.update();
 
 		sceneManager.processActiveScene(decalBatch);
+		decalBatch.flush();
 		entityManager.processEntities(delta, decalBatch);
 		decalBatch.flush();
 	}

@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.corviolis.gorge.entities.CameraEntity;
+import com.corviolis.gorge.entities.DecalEntity;
 import com.corviolis.gorge.entities.Entity;
 import com.corviolis.gorge.entities.EntityManager;
 
@@ -22,15 +24,13 @@ public class SceneManager {
     private final ArrayList<Decal> decals = new ArrayList<>();
     private final Assets assets;
     private final EntityManager entityManager;
-    private final PerspectiveCamera cam;
 
     private final Vector3 up = new Vector3(0, 1, 0);
     private final Vector3 front = new Vector3(0, 0, 1);
 
-    public SceneManager(Assets assets, EntityManager entityManager, PerspectiveCamera cam) {
+    public SceneManager(Assets assets, EntityManager entityManager) {
         this.assets = assets;
         this.entityManager = entityManager;
-        this.cam = cam;
     }
 
     public void loadScene(int level) {
@@ -44,10 +44,6 @@ public class SceneManager {
         activeSceneName = json.getString("name");
         activeSceneId = level;
 
-        cam.position.set(new Vector3(convertToVec(json.get("camera_offset").asFloatArray())));
-        cam.up.set(up);
-        cam.update();
-
         for (JsonValue worldElement : json.get("world")) {
             Decal decal = assets.createDecal();
             decals.add(decal);
@@ -59,13 +55,13 @@ public class SceneManager {
             decal.setTextureRegion(assets.getTextureRegion(worldElement.getString("texture")));
             decal.setScale(worldElement.getInt("scale"));
 
-            decal.setPosition(convertToVec(worldElement.get("position").asFloatArray()));
+            decal.setPosition(getPosition(worldElement));
         }
 
         for (JsonValue entityData : json.get("entities")) {
             Entity entity = entityManager.getEntityFromType(entityData.getString("type"));
-            entity.setPosition(convertToVec(entityData.get("position").asFloatArray()));
-            entity.setDecalPlane(front, up);
+            entity.setPosition(getPosition(entityData));
+            if (entity instanceof DecalEntity) ((DecalEntity) entity).setDecalPlane(front, up);
             entityManager.loadEntity(entity);
         }
     }
@@ -74,7 +70,8 @@ public class SceneManager {
         loadScene(activeSceneId);
     }
 
-    private Vector3 convertToVec(float[] array) {
+    private Vector3 getPosition(JsonValue json) {
+        float[] array = json.get("position").asFloatArray();
         return new Vector3(array[0], array[1], array[2]);
     }
 
